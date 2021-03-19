@@ -77,6 +77,13 @@ function addDepartment() {
     })
 }
 
+function viewDepartment() {
+    connection.query("SELECT * FROM department", (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        mainMenu();
+    })
+};
 
 
 // keep at bottom
