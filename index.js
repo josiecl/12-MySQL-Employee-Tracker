@@ -77,8 +77,73 @@ function addDepartment() {
     })
 }
 
+function addRole() {
+    inquirer.prompt(
+        [{
+            type: 'input',
+            name: 'roleName',
+            message: 'What is the name of the role?',
+        },
+        {
+            type: 'input',
+            name: 'roleSalary',
+            message: 'What is the salary of the role?',
+        },
+        {
+            type: 'input',
+            name: 'departmentId',
+            message: 'What is the department id of the role?',
+        },
+        ]).then(res => {
+        connection.query("INSERT INTO role SET ?", {title: res.roleName, salary: res.roleSalary, department_id: res.departmentId}, (err, res) => {
+            if (err) throw err;
+            console.log("new role added");
+            mainMenu();
+        })
+    })
+}
+
+function addEmployee() {
+    inquirer.prompt(
+        [{
+            type: 'input',
+            name: 'firstName',
+            message: 'What is the first name of the employee?',
+        },
+        {
+            type: 'input',
+            name: 'lastName',
+            message: 'What is the last name of the employee?',
+        },
+        {
+            type: 'input',
+            name: 'roleId',
+            message: 'What is the role id of the employee?',
+        },
+        {
+            type: 'input',
+            name: 'managerId',
+            message: 'What is the manager id of the employee?',
+        },
+        ]).then(res => {
+        connection.query("INSERT INTO employee SET ?", {first_name: res.firstName, last_name: res.lastName, role_id: res.roleId, manager_id: res.managerId}, (err, res) => {
+            if (err) throw err;
+            console.log("new employee added");
+            mainMenu();
+        })
+    })
+}
+
 function viewDepartment() {
     connection.query("SELECT * FROM department", (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        mainMenu();
+    })
+};
+
+function viewRole() {
+    connection.query("SELECT * FROM role", (err, res) => {
         if (err) throw err;
         console.table(res);
         mainMenu();
