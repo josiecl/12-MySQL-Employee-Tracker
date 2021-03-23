@@ -9,10 +9,10 @@ const connection = mysql.createConnection({
   
     port: 3306,
 
-    user: 'root',
+    user: process.env.USER,
 
     password: process.env.PASSWORD,
-    database: 'employee_db',
+    database: process.env.DATABASE,
 });
 
 
@@ -126,6 +126,11 @@ function addEmployee() {
             message: 'What is the manager id of the employee?',
         },
         ]).then(res => {
+            if (res.managerId === "") {
+                res.managerId = null
+                // res.managerId = 0
+            }
+
         connection.query("INSERT INTO employee SET ?", {first_name: res.firstName, last_name: res.lastName, role_id: res.roleId, manager_id: res.managerId}, (err, res) => {
             if (err) throw err;
             console.log("new employee added");
@@ -149,6 +154,18 @@ function viewRole() {
         mainMenu();
     })
 };
+
+function viewEmployee() {
+    connection.query("SELECT * FROM employee", (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        mainMenu();
+    })
+};
+
+// function updateEmp() {
+
+// }
 
 
 // keep at bottom
