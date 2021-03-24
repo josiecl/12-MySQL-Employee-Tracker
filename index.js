@@ -54,6 +54,10 @@ function mainMenu() {
               updateEmp();
               break;
 
+              case 'Update manager of employee':
+              updateEmp();
+              break;
+
             case 'Quit':
             connection.end();
             break;
@@ -163,9 +167,52 @@ function viewEmployee() {
     })
 };
 
-// function updateEmp() {
+function updateEmp() {
+    connection.query("SELECT * FROM employee", (err, res) => {
+        if (err) throw err;
+        const empChoices = res.map(({id, first_name, last_name}) => ({
+            name: `${first_name} ${last_name}`, 
+            value: id
+        }))
+        inquirer.prompt(
+            [
+                {
+                type: "list",
+                name: "updateEmp",
+                choices: empChoices
+                }
+        ]
+        ).then(res => {
+            console.log(res.updateEmp)
+            const employeeChosen = res.updateEmp;
+            connection.query("SELECT * FROM role", (err, res) => {
+                if (err) throw err;
+                const roleChoices = res.map(({id, title}) => ({
+                    name: title, 
+                    value: id
+                }))
+                inquirer.prompt(
+                    [
+                        {
+                        type: "list",
+                        name: "updateRole",
+                        choices: roleChoices
+                        }
+                ]
+                ).then(res => {
+                    console.log(res.updateRole)
+                    const roleChosen = res.updateRole;
+                    updateEmpRole(roleChosen, employeeChosen);
+                    mainMenu();
+                })
+            })
+        })
+    })
+}
 
-// }
+function updateEmpRole(idRole, employeeId) {
+    connection.query('UPDATE employee SET role_id = ? WHERE id = ?', [idRole, employeeId]);
+};
 
 
 // keep at bottom
