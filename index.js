@@ -2,7 +2,7 @@ const inquirer = require('inquirer');
 const mysql = require('mysql');
 require('dotenv').config();
 
-
+// create connection through mysql
 const connection = mysql.createConnection({
 
     host: 'localhost',
@@ -15,7 +15,7 @@ const connection = mysql.createConnection({
     database: process.env.DATABASE,
 });
 
-
+// function for mainmenu with options
 function mainMenu() {
     inquirer.prompt(
         {
@@ -26,6 +26,7 @@ function mainMenu() {
         },
     ).then(res => {
         switch (res.choice) {
+            // cases and breaks
             case 'Add department':
             addDepartment();
             break;
@@ -35,28 +36,24 @@ function mainMenu() {
             break;
 
             case 'Add employee':
-              addEmployee();
-              break;
+            addEmployee();
+            break;
 
-              case 'View department':
-              viewDepartment();
-              break;
+            case 'View department':
+            viewDepartment();
+            break;
 
-              case 'View role':
-              viewRole();
-              break;
+            case 'View role':
+            viewRole();
+            break;
 
-              case 'View employee':
-              viewEmployee();
-              break;
+            case 'View employee':
+            viewEmployee();
+            break;
 
-              case 'Update employee role':
-              updateEmp();
-              break;
-
-              case 'Update manager of employee':
-              updateEmp();
-              break;
+            case 'Update employee role':
+            updateEmp();
+            break;
 
             case 'Quit':
             connection.end();
@@ -65,6 +62,7 @@ function mainMenu() {
     })
 }
 
+// add department function
 function addDepartment() {
     inquirer.prompt(
         {
@@ -81,6 +79,7 @@ function addDepartment() {
     })
 }
 
+// add role function
 function addRole() {
     inquirer.prompt(
         [{
@@ -107,6 +106,7 @@ function addRole() {
     })
 }
 
+// add employee function
 function addEmployee() {
     inquirer.prompt(
         [{
@@ -143,6 +143,7 @@ function addEmployee() {
     })
 }
 
+// view department
 function viewDepartment() {
     connection.query("SELECT * FROM department", (err, res) => {
         if (err) throw err;
@@ -151,6 +152,7 @@ function viewDepartment() {
     })
 };
 
+// view role
 function viewRole() {
     connection.query("SELECT * FROM role", (err, res) => {
         if (err) throw err;
@@ -159,6 +161,7 @@ function viewRole() {
     })
 };
 
+// view employee
 function viewEmployee() {
     connection.query("SELECT * FROM employee", (err, res) => {
         if (err) throw err;
@@ -167,6 +170,7 @@ function viewEmployee() {
     })
 };
 
+// update employee
 function updateEmp() {
     connection.query("SELECT * FROM employee", (err, res) => {
         if (err) throw err;
@@ -175,13 +179,12 @@ function updateEmp() {
             value: id
         }))
         inquirer.prompt(
-            [
                 {
                 type: "list",
                 name: "updateEmp",
                 choices: empChoices
                 }
-        ]
+        // response takes info and updates the employee role
         ).then(res => {
             console.log(res.updateEmp)
             const employeeChosen = res.updateEmp;
@@ -210,9 +213,12 @@ function updateEmp() {
     })
 }
 
+// update employee role function
 function updateEmpRole(idRole, employeeId) {
     connection.query('UPDATE employee SET role_id = ? WHERE id = ?', [idRole, employeeId]);
 };
+
+
 
 
 // keep at bottom
